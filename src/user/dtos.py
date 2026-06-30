@@ -5,3 +5,16 @@ class UserSchema(BaseModel):
     username :str
     password :str
     email :str
+
+class UserResponseSchema(BaseModel):
+    name : str
+    username :str
+    email :str
+    id: int
+
+class LoginSchema(BaseModel):
+    username :str
+    password :str
+
+class LoginResponse(BaseModel):
+    username :str
