@@ -16,5 +16,5 @@ def login(body:LoginSchema, db:Session = Depends(get_db)):
 
 @user_routes.get("/is_authenticated", response_model=UserResponseSchema, status_code= status.HTTP_200_OK)
 def is_auth(request: Request, db:Session = Depends(get_db)):
-    #print(authorization)
+    print(request.headers)
     return controller.is_authenticated(request, db)

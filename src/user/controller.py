@@ -4,6 +4,7 @@ from jwt import InvalidTokenError
 
 from src.user.dtos import UserSchema, LoginSchema
 from src.utils.settings import settings
+
 from sqlalchemy.orm import Session
 from src.user.models import UserModel
 from pwdlib import PasswordHash
@@ -47,7 +48,7 @@ def login_user(body:LoginSchema, db:Session):
         raise HTTPException(status_code= status.HTTP_401_UNAUTHORIZED, detail="Incorrect password.")
 
     #exp_time = datetime.now() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    exp_time = datetime.now() + timedelta(seconds=30)
+    exp_time = datetime.now() + timedelta(seconds=120)
     print(exp_time.timestamp())
     token = jwt.encode({"_id":user.id, "exp": exp_time.timestamp()}, settings.SECRET_KEY, settings.ALGORITHM)
 
@@ -68,9 +69,6 @@ def is_authenticated(request: Request, db: Session):
         current_time = datetime.now().timestamp()
 
         print(exp_time - current_time)
-
-        if current_time > exp_time:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="You are unauthorized")
         user = db.query(UserModel).filter(UserModel.id == user_id).first()
         if not user:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="You are unauthorized.")
