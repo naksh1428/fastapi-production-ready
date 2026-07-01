@@ -66,7 +66,7 @@ PyBase/
 1. **Clone the repository**
    ```bash
    git clone <your-repo-url>
-   cd task-management-api
+   cd PyBase
    ```
 
 2. **Create and activate a virtual environment**
