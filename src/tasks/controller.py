@@ -11,11 +11,11 @@ def get_task_or_404(db:Session, task_id:int):
         raise HTTPException(404, detail="Task not found, Task Id is Incorrect")
     return task
 
-def create_task(body:TaskSchema, db:Session):
+def create_task(body:TaskSchema, db:Session, user_id:int):
     print(body.model_dump())
     data = body.model_dump()
     #return controller.create_task(body)
-    new_task = TaskModel(title = data["title"], description = data["description"], is_completed = data["is_completed"])
+    new_task = TaskModel(title = data["title"], description = data["description"], is_completed = data["is_completed"], user_id = user_id)
     db.add(new_task)
     db.commit()
     db.refresh(new_task)

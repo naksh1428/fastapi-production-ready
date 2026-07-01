@@ -47,8 +47,9 @@ def login_user(body:LoginSchema, db:Session):
     if not verify_password(body.password, user.hashed_password):
         raise HTTPException(status_code= status.HTTP_401_UNAUTHORIZED, detail="Incorrect password.")
 
-    #exp_time = datetime.now() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    exp_time = datetime.now() + timedelta(seconds=120)
+    exp_time = datetime.now() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    # Testing
+    #exp_time = datetime.now() + timedelta(seconds=120)
     print(exp_time.timestamp())
     token = jwt.encode({"_id":user.id, "exp": exp_time.timestamp()}, settings.SECRET_KEY, settings.ALGORITHM)
 
@@ -62,7 +63,6 @@ def is_authenticated(request: Request, db: Session):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="You are unauthorized")
         token = token.split(" ")[-1]
         data = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
-        print(data)
         user_id = data.get("_id")
         exp_time = int(data.get("exp"))
 
