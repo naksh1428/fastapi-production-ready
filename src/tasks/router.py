@@ -6,6 +6,8 @@ from src.utils.db import get_db
 from src.user.models import UserModel
 from typing import List
 from  sqlalchemy.orm import Session
+from fastapi_cache.decorator import cache
+#from ..utils.redis_config import universal_key_builder, cache_wrapper
 
 
 task_routes = APIRouter(prefix="/tasks", tags=["Tasks"])
@@ -14,11 +16,15 @@ task_routes = APIRouter(prefix="/tasks", tags=["Tasks"])
 def create_task(body:TaskSchema, db:Session = Depends(get_db), user:UserModel = Depends(is_authenticated)):
     return controller.create_task(body, db, user.id)
 
+
 @task_routes.get("/all_tasks",response_model=List[TaskResponseSchema], status_code= status.HTTP_200_OK)
+@cache(expire=300) # cache for 5 minutes
 def get_all_tasks(db:Session =Depends(get_db), user:UserModel = Depends(is_authenticated)):
     return controller.get_tasks(db, user.id)
 
+
 @task_routes.get("/get_task/{task_id}", response_model=TaskResponseSchema, status_code= status.HTTP_200_OK)
+@cache(expire=300)
 def get_task(task_id:int, db:Session =Depends(get_db)):
     return controller.get_one_task(task_id, db)
 
